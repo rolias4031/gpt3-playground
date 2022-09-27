@@ -1,13 +1,14 @@
 import { useMutation } from 'react-query';
 
 async function sendCompletionData(config) {
+  // variables passed on object b/c useMutation requires that.
   const url = '/api/completion';
   const fetchOptions = {
     method: 'POST',
     body: JSON.stringify({
       model: 'text-ada-001',
       prompt: config.promptInput,
-      max_tokens: 100,
+      max_tokens: 100
     }),
   };
   const response = await fetch(url, fetchOptions);
@@ -18,12 +19,7 @@ async function sendCompletionData(config) {
   return result;
 }
 
+// onSuccess: mutation raises state, saves to localStorage
 export const useMakeCompletion = () => {
-  return useMutation(sendCompletionData, {
-    onSuccess: (data, variables) => {
-      variables.raiseState(() => {
-        return data.ai_response.choices[0].text;
-      });
-    },
-  });
+  return useMutation(sendCompletionData);
 };
