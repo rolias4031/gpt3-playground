@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Display from '../components/Display';
 import InterfaceForm from '../components/InterfaceForm';
+import { useDialogue } from '../lib/hooks';
 
 export default function Home() {
-  const [dialogue, setDialogue] = useState();
+  const { dialogue, setDialogue } = useDialogue();
   return (
     <>
       <Display curState={dialogue} />
-      <InterfaceForm raiseState={setDialogue} />
+      <InterfaceForm curState={dialogue} raiseState={setDialogue} />
     </>
   );
 }

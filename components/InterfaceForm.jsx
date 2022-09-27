@@ -11,31 +11,29 @@ import { useMakeCompletion } from '../lib/mutations';
 
 */
 
-function InterfaceForm({ raiseState }) {
-  const { dialogue, addEntriesToDialogue, createNewDialogue } =
-    useManageDialogue(raiseState);
-  console.log('form', dialogue);
-
+function InterfaceForm({ curState, raiseState }) {
+  const { addEntriesToDialogue, createNewDialogue } = useManageDialogue(
+    curState,
+    raiseState,
+  );
   const [textareaInput, setTextareaInput] = useState();
   const { mutate, isLoading, isSuccess, data } = useMakeCompletion();
 
   function submitHandler(event) {
     event.preventDefault();
-    const config = { textareaInput };
+    // combine existing dialogue with new input to continue context. should 
+    const config = { prompt: textareaInput };
     mutate(config, {
       onSuccess: (data, variables) => {
         // add two entries to localStorage and update dialogue state
         const newDialogue = addEntriesToDialogue(
-          variables.textareaInput,
+          variables.prompt,
           'user',
           data.ai_response.choices[0].text,
           'ai',
         );
         // resetTextareaInput
         setTextareaInput('');
-        // raise dialogue for Display
-        raiseState(() => newDialogue);
-        console.log('mutate', dialogue);
       },
     });
   }
@@ -43,7 +41,6 @@ function InterfaceForm({ raiseState }) {
     setTextareaInput(event.target.value);
   }
   function clearHandler() {
-    // just want to reset dialogue, not remove it.
     createNewDialogue();
   }
   return (
@@ -78,6 +75,7 @@ function InterfaceForm({ raiseState }) {
 
 InterfaceForm.propTypes = {
   raiseState: PropTypes.func.isRequired,
+  curState: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.string)).isRequired
 };
 
 export default InterfaceForm;

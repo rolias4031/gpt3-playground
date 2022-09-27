@@ -6,8 +6,8 @@ async function sendCompletionData(config) {
   const fetchOptions = {
     method: 'POST',
     body: JSON.stringify({
-      model: 'text-ada-001',
-      prompt: config.textareaInput,
+      model: 'text-curie-001',
+      prompt: config.prompt,
       max_tokens: 100
     }),
   };
