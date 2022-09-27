@@ -7,7 +7,7 @@ async function sendCompletionData(config) {
     method: 'POST',
     body: JSON.stringify({
       model: 'text-ada-001',
-      prompt: config.promptInput,
+      prompt: config.textareaInput,
       max_tokens: 100
     }),
   };

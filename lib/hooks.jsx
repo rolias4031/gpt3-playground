@@ -6,7 +6,9 @@ import { useEffect, useState } from 'react';
 2. get the localStorage dialogue after render and push that to state
 3. define a function for turning dialogue to array of text
 */
-export const useManageDialogue = () => {
+export const useManageDialogue = (raiseState) => {
+  const [dialogue, setDialogue] = useState();
+
   class Entry {
     // takes info = { text, from, timestamp }
     constructor(text, from, timestamp) {
@@ -15,9 +17,16 @@ export const useManageDialogue = () => {
       this.timestamp = timestamp;
     }
   }
+
+  function getDialogue() {
+    return JSON.parse(window.localStorage.getItem('dialogue'));
+  }
+
   function getDialogueText(dialogue) {
+    // array of strings from entry.text
     return dialogue.map((entry) => entry.text);
   }
+
   function addEntriesToDialogue(userText, userFrom, aiText, aiFrom) {
     const ls = window.localStorage;
     // create new entries
@@ -30,13 +39,14 @@ export const useManageDialogue = () => {
     // save newDialogue to localStorage
     ls.setItem('dialogue', JSON.stringify(dialogueRaw));
     setDialogue(() => dialogueRaw);
+    return dialogueRaw;
   }
+
   function createNewDialogue() {
     const newDialogue = [];
     setDialogue(() => newDialogue);
     window.localStorage.setItem('dialogue', JSON.stringify(newDialogue));
   }
-  const [dialogue, setDialogue] = useState();
 
   useEffect(() => {
     let dialogue = window.localStorage.getItem('dialogue');
@@ -45,6 +55,7 @@ export const useManageDialogue = () => {
     } else {
       dialogue = JSON.parse(dialogue);
       setDialogue(() => dialogue);
+      raiseState(() => dialogue);
     }
   }, []);
   return { dialogue, addEntriesToDialogue, createNewDialogue, getDialogueText };

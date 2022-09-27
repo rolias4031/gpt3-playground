@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
 /*
 * EVENTUALLY: conversation state to be an array of objects -> { message: String, timestamp: Date, from: User || GPT3 } this allows tracking of conversation, saving, etc.
@@ -9,9 +10,25 @@ import React, { useState } from 'react'
 */
 
 function Display({ curState }) {
-  return (
-    <p>{curState}</p>
-  )
+  console.log(curState);
+  let dialogueContent;
+  if (curState) {
+    dialogueContent = curState.map((entry) => {
+      const entryClass = `${
+        entry.from === 'user' ? 'text-gray-600' : 'text-gray-800'
+      }`;
+      return (
+        <p className={`${entryClass}`} key={`${entry.timestamp}-${entry.from}`}>
+          {entry.text}
+        </p>
+      );
+    });
+  }
+  return <div>{dialogueContent}</div>;
 }
 
-export default Display
+Display.propTypes = {
+  curState: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.string)),
+};
+
+export default Display;

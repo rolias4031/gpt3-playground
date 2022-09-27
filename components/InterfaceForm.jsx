@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { useManageDialogue } from '../lib/hooks';
 import { useMakeCompletion } from '../lib/mutations';
 
@@ -11,32 +12,35 @@ import { useMakeCompletion } from '../lib/mutations';
 */
 
 function InterfaceForm({ raiseState }) {
-  const { dialogue, addEntriesToDialogue, createNewDialogue, getDialogueText } =
-    useManageDialogue();
+  const { dialogue, addEntriesToDialogue, createNewDialogue } =
+    useManageDialogue(raiseState);
+  console.log('form', dialogue);
 
-  const [promptInput, setPromptInput] = useState();
+  const [textareaInput, setTextareaInput] = useState();
   const { mutate, isLoading, isSuccess, data } = useMakeCompletion();
 
   function submitHandler(event) {
     event.preventDefault();
-    const config = { promptInput, raiseState };
+    const config = { textareaInput };
     mutate(config, {
       onSuccess: (data, variables) => {
-        // reset prompt, raise recent state for Display
-        setPromptInput('');
-        raiseState(() => data.ai_response.choices[0].text);
         // add two entries to localStorage and update dialogue state
-        addEntriesToDialogue(
-          variables.promptInput,
+        const newDialogue = addEntriesToDialogue(
+          variables.textareaInput,
           'user',
           data.ai_response.choices[0].text,
           'ai',
         );
+        // resetTextareaInput
+        setTextareaInput('');
+        // raise dialogue for Display
+        raiseState(() => newDialogue);
+        console.log('mutate', dialogue);
       },
     });
   }
   function changeHandler(event) {
-    setPromptInput(event.target.value);
+    setTextareaInput(event.target.value);
   }
   function clearHandler() {
     // just want to reset dialogue, not remove it.
@@ -51,7 +55,7 @@ function InterfaceForm({ raiseState }) {
         <textarea
           onChange={changeHandler}
           className="border-gray-400 border-2 rounded w-full h-36 p-2 mx-auto my-5 block"
-          value={promptInput}
+          value={textareaInput}
         ></textarea>
         <div className="text-right">
           <button
@@ -68,12 +72,12 @@ function InterfaceForm({ raiseState }) {
           />
         </div>
       </form>
-      {dialogue &&
-        getDialogueText(dialogue).map((entry) => {
-          return <p key={entry}>{entry}</p>;
-        })}
     </>
   );
 }
+
+InterfaceForm.propTypes = {
+  raiseState: PropTypes.func.isRequired,
+};
 
 export default InterfaceForm;

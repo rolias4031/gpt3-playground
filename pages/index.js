@@ -3,11 +3,11 @@ import Display from '../components/Display';
 import InterfaceForm from '../components/InterfaceForm';
 
 export default function Home() {
-  const [response, setResponse] = useState();
+  const [dialogue, setDialogue] = useState();
   return (
     <>
-      <Display curState={response} />
-      <InterfaceForm raiseState={setResponse} />
+      <Display curState={dialogue} />
+      <InterfaceForm raiseState={setDialogue} />
     </>
   );
 }
