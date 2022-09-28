@@ -10,21 +10,20 @@ import PropTypes from 'prop-types';
 */
 
 function Display({ curState }) {
-  console.log(curState);
   let dialogueContent;
   if (curState) {
     dialogueContent = curState.map((entry) => {
       const entryClass = `${
-        entry.from === 'user' ? 'text-gray-600' : 'text-gray-800'
+        entry.from === 'user' ? 'text-gray-200' : 'text-yellow-200'
       }`;
       return (
-        <p className={`${entryClass}`} key={`${entry.timestamp}-${entry.from}`}>
+        <p className={`p-3 ${entryClass}`} key={`${entry.timestamp}-${entry.from}`}>
           {entry.text}
         </p>
       );
     });
   }
-  return <div>{dialogueContent}</div>;
+  return <div className='bg-gray-800 rounded'>{dialogueContent}</div>;
 }
 
 Display.propTypes = {

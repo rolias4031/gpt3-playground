@@ -8,7 +8,7 @@ async function sendCompletionData(config) {
     body: JSON.stringify({
       model: 'text-curie-001',
       prompt: config.prompt,
-      max_tokens: 100
+      max_tokens: 1000
     }),
   };
   const response = await fetch(url, fetchOptions);

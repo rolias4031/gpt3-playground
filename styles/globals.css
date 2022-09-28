@@ -30,4 +30,19 @@ a {
 }
 
 @layer components {
+  .btn {
+    @apply px-3 py-1 font-medium rounded;
+  }
+
+  .btn:active {
+    @apply bg-yellow-500
+  }
+
+  .btn-sm {
+    @apply px-2 p-1 text-sm rounded
+  }
+
+  .label {
+    @apply font-medium text-gray-100
+  }
 }
